@@ -226,6 +226,7 @@ export default function Navbar() {
               >
                 <BuildIcon />
               </IconButton>
+              </Link>
 
               <IconButton
                 size="large"
@@ -238,7 +239,7 @@ export default function Navbar() {
               >
                 <AccountCircle />
               </IconButton>
-            </Link>
+            
           </Box>
           <Box sx={{ display: { xs: 'flex', md: 'none' } }}>
             <IconButton

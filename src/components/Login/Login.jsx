@@ -1,4 +1,5 @@
-import  { useState } from 'react';
+import { useState } from 'react';
+import { Link } from 'react-router-dom';
 
 const Login = () => {
   const [username, setUsername] = useState('');
@@ -14,7 +15,7 @@ const Login = () => {
   return (
     <div className="flex items-center justify-center min-h-screen bg-gray-100">
       <div className="w-full max-w-lg p-8 space-y-8 bg-white rounded-lg shadow-md">
-      
+
         <div className="text-center">
           <h2 className="text-2xl font-bold text-gray-800">INICIAR SESIÓN</h2>
           <p className="text-gray-600">Inicia sesión para acceder a tu cuenta</p>
@@ -48,12 +49,12 @@ const Login = () => {
               Forgot your password?
             </a>
           </div>
-          <button
-            type="submit"
-            className="w-full px-4 py-2 text-white bg-blue-500 rounded-md hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-500"
-          >
+          <Link to='/home'
+            className="w-full block px-4 py-2 text-white bg-blue-500 rounded-md hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-500 text-center flex justify-center">
             Iniciar sesión
-          </button>
+          </Link>
+
+
         </form>
       </div>
     </div>
