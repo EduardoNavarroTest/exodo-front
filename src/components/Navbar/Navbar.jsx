@@ -17,6 +17,7 @@ import NotificationsIcon from '@mui/icons-material/Notifications';
 import MoreIcon from '@mui/icons-material/MoreVert';
 import BuildIcon from '@mui/icons-material/Build';
 import { Link } from 'react-router-dom';
+import { useState, useEffect } from 'react';
 
 const Search = styled('div')(({ theme }) => ({
   position: 'relative',
@@ -62,6 +63,10 @@ export default function Navbar() {
   const [anchorEl, setAnchorEl] = React.useState(null);
   const [mobileMoreAnchorEl, setMobileMoreAnchorEl] = React.useState(null);
 
+  const [countMessages, setCountMessages] = useState(0);
+  const [countNotifications, setCountNotifications] = useState(0);
+  
+
   const isMenuOpen = Boolean(anchorEl);
   const isMobileMenuOpen = Boolean(mobileMoreAnchorEl);
 
@@ -81,6 +86,14 @@ export default function Navbar() {
   const handleMobileMenuOpen = (event) => {
     setMobileMoreAnchorEl(event.currentTarget);
   };
+
+  const handleCountMessages = () => {
+    setCountMessages(countMessages + 1);
+  }
+
+  const handleCountNotifications = () => {
+    setCountNotifications(countNotifications + 1);
+  }
 
   const menuId = 'primary-search-account-menu';
   const renderMenu = (
@@ -123,7 +136,7 @@ export default function Navbar() {
     >
       <MenuItem>
         <IconButton size="large" aria-label="show 4 new mails" color="inherit">
-          <Badge badgeContent={4} color="error">
+          <Badge badgeContent={countMessages} color="error">
             <MailIcon />
           </Badge>
         </IconButton>
@@ -136,7 +149,7 @@ export default function Navbar() {
           aria-label="show 17 new notifications"
           color="inherit"
         >
-          <Badge badgeContent={17} color="error">
+          <Badge badgeContent={countNotifications} color="error">
             <NotificationsIcon />
           </Badge>
         </IconButton>
@@ -146,12 +159,10 @@ export default function Navbar() {
       <MenuItem>
         <IconButton
           size="large"
-          aria-label="show 17 new notifications"
+          aria-label="show config"
           color="inherit"
         >
-          <Badge badgeContent={17} color="error">
-            <BuildIcon />
-          </Badge>
+          <BuildIcon />
         </IconButton>
         <p>Config</p>
       </MenuItem>
@@ -190,7 +201,7 @@ export default function Navbar() {
             component="div"
             sx={{ display: { xs: 'none', sm: 'block' } }}
           >
-            MUI
+            TestComplete Web
           </Typography>
           <Search>
             <SearchIconWrapper>
@@ -204,7 +215,7 @@ export default function Navbar() {
           <Box sx={{ flexGrow: 1 }} />
           <Box sx={{ display: { xs: 'none', md: 'flex' } }}>
             <IconButton size="large" aria-label="show 4 new mails" color="inherit">
-              <Badge badgeContent={4} color="error">
+              <Badge badgeContent={countMessages} color="error">
                 <MailIcon />
               </Badge>
             </IconButton>
@@ -213,7 +224,7 @@ export default function Navbar() {
               aria-label="show 17 new notifications"
               color="inherit"
             >
-              <Badge badgeContent={17} color="error">
+              <Badge badgeContent={countNotifications} color="error">
                 <NotificationsIcon />
               </Badge>
             </IconButton>
@@ -226,20 +237,20 @@ export default function Navbar() {
               >
                 <BuildIcon />
               </IconButton>
-              </Link>
+            </Link>
 
-              <IconButton
-                size="large"
-                edge="end"
-                aria-label="account of current user"
-                aria-controls={menuId}
-                aria-haspopup="true"
-                onClick={handleProfileMenuOpen}
-                color="inherit"
-              >
-                <AccountCircle />
-              </IconButton>
-            
+            <IconButton
+              size="large"
+              edge="end"
+              aria-label="account of current user"
+              aria-controls={menuId}
+              aria-haspopup="true"
+              onClick={handleProfileMenuOpen}
+              color="inherit"
+            >
+              <AccountCircle />
+            </IconButton>
+
           </Box>
           <Box sx={{ display: { xs: 'flex', md: 'none' } }}>
             <IconButton
@@ -255,6 +266,9 @@ export default function Navbar() {
           </Box>
         </Toolbar>
       </AppBar>
+      <button onClick={handleCountMessages}>Add Message</button>
+      <button onClick={handleCountNotifications}>Add Notification</button>
+
       {renderMobileMenu}
       {renderMenu}
     </Box>
