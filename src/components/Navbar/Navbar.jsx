@@ -60,14 +60,14 @@ const StyledInputBase = styled(InputBase)(({ theme }) => ({
 }));
 
 export default function Navbar() {
-  const [anchorEl, setAnchorEl] = React.useState(null);
-  const [mobileMoreAnchorEl, setMobileMoreAnchorEl] = React.useState(null);
+  const [anchorEl, setAnchorEl] = useState(null);
+  const [mobileMoreAnchorEl, setMobileMoreAnchorEl] = useState(null);
 
   const [countMessages, setCountMessages] = useState(0);
   const [countNotifications, setCountNotifications] = useState(0);
   
 
-  const isMenuOpen = Boolean(anchorEl);
+  const isMenuOpen = Boolean(anchorEl); 
   const isMobileMenuOpen = Boolean(mobileMoreAnchorEl);
 
   const handleProfileMenuOpen = (event) => {
