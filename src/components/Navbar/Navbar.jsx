@@ -16,8 +16,11 @@ import MailIcon from '@mui/icons-material/Mail';
 import NotificationsIcon from '@mui/icons-material/Notifications';
 import MoreIcon from '@mui/icons-material/MoreVert';
 import BuildIcon from '@mui/icons-material/Build';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import { useState, useEffect } from 'react';
+import FormGender from '../Form/FormGender/FormGender';
+import FormIdType from '../Form/FormIdType/FormIdType';
+import FormPerson from '../Form/FormPerson/FormPerson';
 
 const Search = styled('div')(({ theme }) => ({
   position: 'relative',
@@ -62,12 +65,13 @@ const StyledInputBase = styled(InputBase)(({ theme }) => ({
 export default function Navbar() {
   const [anchorEl, setAnchorEl] = useState(null);
   const [mobileMoreAnchorEl, setMobileMoreAnchorEl] = useState(null);
+  const [selectedComponent, setSelectedComponent] = useState(null); // Estado para manejar el componente seleccionado
 
   const [countMessages, setCountMessages] = useState(0);
   const [countNotifications, setCountNotifications] = useState(0);
-  
 
-  const isMenuOpen = Boolean(anchorEl); 
+
+  const isMenuOpen = Boolean(anchorEl);
   const isMobileMenuOpen = Boolean(mobileMoreAnchorEl);
 
   const handleProfileMenuOpen = (event) => {
@@ -95,6 +99,23 @@ export default function Navbar() {
     setCountNotifications(countNotifications + 1);
   }
 
+  const handleShowComponentes = (id) => {
+    switch (id) {
+      case 1:
+        setSelectedComponent(<FormPerson />);
+        break;
+      case 2:
+        setSelectedComponent(<FormIdType />);
+        break;
+      case 3:
+        setSelectedComponent(<FormGender />);
+        break;
+      default:
+        setSelectedComponent(null);
+    }
+    handleMenuClose(); // Cerrar el menú al seleccionar
+  };
+
   const menuId = 'primary-search-account-menu';
   const renderMenu = (
     <Menu
@@ -114,6 +135,11 @@ export default function Navbar() {
     >
       <MenuItem onClick={handleMenuClose}>Perfil</MenuItem>
       <MenuItem onClick={handleMenuClose}>Cerrar sesión</MenuItem>
+
+      {/* Maestros esto es TEST se debe borrar */}
+      <MenuItem onClick={() => handleShowComponentes(1)}>Maestro de usuarios</MenuItem>
+      <MenuItem onClick={() => handleShowComponentes(2)}>Maestro de Tipos de Identificación</MenuItem>
+      <MenuItem onClick={() => handleShowComponentes(3)}>Maestro de Tipos de Género</MenuItem>
     </Menu>
   );
 
@@ -271,6 +297,11 @@ export default function Navbar() {
 
       {renderMobileMenu}
       {renderMenu}
+
+      {/* Aquí se renderiza el componente seleccionado */}
+      <Box sx={{ p: 3 }}>
+        {selectedComponent ? selectedComponent : <Typography>Seleccione una opción del menú.</Typography>}
+      </Box>
     </Box>
   );
 }

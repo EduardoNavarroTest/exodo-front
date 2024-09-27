@@ -1,6 +1,6 @@
 import React from 'react'
 import { useState, useEffect } from 'react'
-import data from "../data.json"
+import data from "../../data.json"
 
 const Test2 = () => {
 

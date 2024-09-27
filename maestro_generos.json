@@ -1,0 +1,32 @@
+[
+    {
+        "id": 1,
+        "codigo": "M",
+        "genero": "Masculino",
+        "estado": true,
+        "fecha_creacion": "2022-05-05T16:07:21.000+00:00",
+        "fecha_actualizacion": "2022-05-05T16:07:21.000+00:00",
+        "usuario_creacion": "admin",
+        "usuario_actualizacion": "admin"  
+    },
+    {
+        "id": 1,
+        "codigo": "F",
+        "genero": "Femenino",
+        "estado": true,
+        "fecha_creacion": "2022-05-05T16:07:21.000+00:00",
+        "fecha_actualizacion": "2022-05-05T16:07:21.000+00:00",
+        "usuario_creacion": "admin",
+        "usuario_actualizacion": "admin"  
+    },
+    {
+        "id": 1,
+        "codigo": "O",
+        "genero": "Otros",
+        "estado": false,
+        "fecha_creacion": "2022-05-05T16:07:21.000+00:00",
+        "fecha_actualizacion": "2022-05-05T16:07:21.000+00:00",
+        "usuario_creacion": "admin",
+        "usuario_actualizacion": "admin"  
+    }
+]

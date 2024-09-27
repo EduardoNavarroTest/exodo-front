@@ -6,10 +6,10 @@ import Inventory from './pages/Inventory/Inventory.jsx';
 import Config from './pages/Config/Config.jsx';
 import Signin from './pages/Signin/Signin.jsx';
 import NotFoundPage from './pages/NotFoundPage/NotFoundPage.jsx';
-import Test from './Test.jsx';
 import './App.css'
-import Test2 from './Test2.jsx';
-import Pokeapi from './Pokeapi.jsx';
+// import Test from './test/Test.jsx';
+// import Test2 from './test/Test2.jsx';
+// import Pokeapi from './test/Pokeapi.jsx';
 
 function App() {
   return (
@@ -25,9 +25,8 @@ function App() {
         <Route path="/" element={<Signin />} />
         <Route path='*' element={<NotFoundPage />} />
       </Routes>
-      <Test email="a@a.com" name="eduardo" />
-      <Test2 />
-      <Pokeapi />
+
+    
     </BrowserRouter>
   );
 }
