@@ -25,7 +25,6 @@ function App() {
         <Route path="/" element={<Signin />} />
         <Route path='*' element={<NotFoundPage />} />
       </Routes>
-
     
     </BrowserRouter>
   );

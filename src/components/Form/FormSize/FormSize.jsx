@@ -1,16 +1,19 @@
+// FormSize.jsx
 import { useState, useEffect } from 'react';
 import { Button, Box, Typography, Switch, FormControlLabel, TextField, IconButton } from '@mui/material';
 import { Delete as DeleteIcon, Save as SaveIcon, HighlightOff as HighlightOffIcon } from '@mui/icons-material';
 import SearchIcon from '@mui/icons-material/Search';
 import { formContainerStyles } from '../formStyle';
+import SearchModal from "../SearchModal/SearchModal.jsx";
 
-const FormGender = () => {
+const FormSize = () => {
     const [code, setCode] = useState('');
-    const [gender, setGender] = useState('');
+    const [size, setSize] = useState('');
     const [description, setDescription] = useState('');
     const [status, setStatus] = useState(true);
     const [isEditMode, setIsEditMode] = useState(false);
     const [existingCodes, setExistingCodes] = useState(['CO', 'US']);
+    const [isSearchOpen, setIsSearchOpen] = useState(false); // Estado para el modal de búsqueda
 
     useEffect(() => {
         if (existingCodes.includes(code)) {
@@ -30,7 +33,7 @@ const FormGender = () => {
 
         console.log({
             codigo: code,
-            estadoCivil: gender,
+            estadoCivil: size,
             descripcion: description,
             estado: status ? 'Activo' : 'Inactivo',
         });
@@ -44,7 +47,7 @@ const FormGender = () => {
 
     const handleCancel = () => {
         setCode('');
-        setGender('');
+        setSize('');
         setDescription('');
         setStatus(true);
     };
@@ -55,7 +58,16 @@ const FormGender = () => {
     };
 
     const handleSearch = () => {
+        setIsSearchOpen(true); // Abre el modal de búsqueda
+    };
+
+    const handleCloseSearch = () => {
+        setIsSearchOpen(false); // Cierra el modal de búsqueda
+    };
+
+    const handleSearchAction = () => {
         console.log(`Buscando el registro con código: ${code}`);
+        setIsSearchOpen(false); // Cierra el modal después de la búsqueda
     };
 
     return (
@@ -78,7 +90,7 @@ const FormGender = () => {
                     color: '#0d6efd',
                 }}
             >
-                Maestro de Géneros
+                Maestro de Tallas
             </Typography>
 
             {/* Campo de código con icono de búsqueda */}
@@ -101,7 +113,6 @@ const FormGender = () => {
                         <IconButton
                             onClick={handleSearch}
                             size="small"
-                            
                         >
                             <SearchIcon />
                         </IconButton>
@@ -111,11 +122,11 @@ const FormGender = () => {
 
             <TextField
                 required
-                id="gender"
-                label="Género"
+                id="size"
+                label="Talla"
                 variant="standard"
-                value={gender}
-                onChange={(e) => setGender(e.target.value)}
+                value={size}
+                onChange={(e) => setSize(e.target.value)}
                 inputProps={{ maxLength: 20 }}
                 sx={{ marginBottom: 2 }}
             />
@@ -173,8 +184,19 @@ const FormGender = () => {
                     Eliminar
                 </Button>
             </Box>
+
+            {/* Modal separado */}
+            <SearchModal
+                open={isSearchOpen}
+                onClose={handleCloseSearch}
+                onSearch={handleSearchAction}
+                searchOptions={[
+                    { label: 'Código', value: 'code' },
+                    { label: 'Nombre', value: 'name' },
+                ]}
+            />
         </Box>
     );
 };
 
-export default FormGender;
+export default FormSize;

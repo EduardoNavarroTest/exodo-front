@@ -21,6 +21,10 @@ import { useState, useEffect } from 'react';
 import FormGender from '../Form/FormGender/FormGender';
 import FormIdType from '../Form/FormIdType/FormIdType';
 import FormPerson from '../Form/FormPerson/FormPerson';
+import FormCountry from '../Form/FormCountry/FormCountry';
+import FormMaritalStatus from '../Form/FormMaritalStatus/FormMaritalStatus';
+import FormColor from '../Form/FormColor/FormColor';
+import FormSize from '../Form/FormSize/FormSize';
 
 const Search = styled('div')(({ theme }) => ({
   position: 'relative',
@@ -110,6 +114,18 @@ export default function Navbar() {
       case 3:
         setSelectedComponent(<FormGender />);
         break;
+        case 4:
+        setSelectedComponent(<FormCountry />);
+        break;
+        case 5:
+        setSelectedComponent(<FormMaritalStatus />);
+        break;
+        case 6:
+        setSelectedComponent(<FormColor />);
+        break;
+        case 7:
+          setSelectedComponent(<FormSize />);
+          break;
       default:
         setSelectedComponent(null);
     }
@@ -140,6 +156,11 @@ export default function Navbar() {
       <MenuItem onClick={() => handleShowComponentes(1)}>Maestro de usuarios</MenuItem>
       <MenuItem onClick={() => handleShowComponentes(2)}>Maestro de Tipos de Identificación</MenuItem>
       <MenuItem onClick={() => handleShowComponentes(3)}>Maestro de Tipos de Género</MenuItem>
+      <MenuItem onClick={() => handleShowComponentes(4)}>Maestro de Países</MenuItem>
+      <MenuItem onClick={() => handleShowComponentes(5)}>Maestro de Estados Civiles</MenuItem>
+      <MenuItem onClick={() => handleShowComponentes(6)}>Maestro de Colores</MenuItem>
+      <MenuItem onClick={() => handleShowComponentes(7)}>Maestro de Tallas</MenuItem>
+      
     </Menu>
   );
 

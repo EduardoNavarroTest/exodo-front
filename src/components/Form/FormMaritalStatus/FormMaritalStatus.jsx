@@ -4,9 +4,9 @@ import { Delete as DeleteIcon, Save as SaveIcon, HighlightOff as HighlightOffIco
 import SearchIcon from '@mui/icons-material/Search';
 import { formContainerStyles } from '../formStyle';
 
-const FormGender = () => {
+const FormMaritalStatus = () => {
     const [code, setCode] = useState('');
-    const [gender, setGender] = useState('');
+    const [marital, setMarital] = useState('');
     const [description, setDescription] = useState('');
     const [status, setStatus] = useState(true);
     const [isEditMode, setIsEditMode] = useState(false);
@@ -30,7 +30,7 @@ const FormGender = () => {
 
         console.log({
             codigo: code,
-            estadoCivil: gender,
+            estadoCivil: marital,
             descripcion: description,
             estado: status ? 'Activo' : 'Inactivo',
         });
@@ -44,7 +44,7 @@ const FormGender = () => {
 
     const handleCancel = () => {
         setCode('');
-        setGender('');
+        setMarital('');
         setDescription('');
         setStatus(true);
     };
@@ -78,7 +78,7 @@ const FormGender = () => {
                     color: '#0d6efd',
                 }}
             >
-                Maestro de Géneros
+                Maestro de Estados Civiles
             </Typography>
 
             {/* Campo de código con icono de búsqueda */}
@@ -111,11 +111,11 @@ const FormGender = () => {
 
             <TextField
                 required
-                id="gender"
-                label="Género"
+                id="marital"
+                label="Estado civil"
                 variant="standard"
-                value={gender}
-                onChange={(e) => setGender(e.target.value)}
+                value={marital}
+                onChange={(e) => setMarital(e.target.value)}
                 inputProps={{ maxLength: 20 }}
                 sx={{ marginBottom: 2 }}
             />
@@ -124,7 +124,7 @@ const FormGender = () => {
                 id="description"
                 label="Descripción"
                 variant="standard"
-                value={description}
+                value={description} 
                 onChange={(e) => setDescription(e.target.value)}
                 inputProps={{ maxLength: 50 }}
                 sx={{ marginBottom: 2 }}
@@ -143,7 +143,7 @@ const FormGender = () => {
             {/* Botones */}
             <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: 0.5 }}>
                 <Button
-                    type="submit"
+                    marital="submit"
                     variant="contained"
                     color="primary"
                     startIcon={<SaveIcon />}
@@ -177,4 +177,4 @@ const FormGender = () => {
     );
 };
 
-export default FormGender;
+export default FormMaritalStatus;

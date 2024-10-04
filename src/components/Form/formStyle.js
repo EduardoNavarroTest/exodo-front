@@ -1,6 +1,6 @@
 // formStyles.js
 export const formContainerStyles = {
-    '& .MuiTextField-root': { m: 1, width: '25ch' },
+    '& .MuiTextField-root': { m: 1, width: '40ch' },
     display: 'flex',
     flexDirection: 'column',
     alignItems: 'center',  // Centra los componentes horizontalmente

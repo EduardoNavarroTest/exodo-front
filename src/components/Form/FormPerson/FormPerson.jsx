@@ -1,5 +1,7 @@
 import React, { useState } from 'react';
 import { Button, Box, Typography, Switch, FormControlLabel, TextField, MenuItem, Grid } from '@mui/material';
+import { Delete as DeleteIcon, Save as SaveIcon, HighlightOff as HighlightOffIcon } from '@mui/icons-material';
+import SearchIcon from '@mui/icons-material/Search';
 import { formContainerStyles } from '../formStyle';
 
 const FormPerson = () => {
@@ -49,10 +51,19 @@ const FormPerson = () => {
         setActive(true);
     };
 
+    const handleDelete = () => {
+        console.log('Eliminando el registro');
+    }
+
+    const handleSearch = () => {
+        console.log('Buscando el registro');
+    }
+    
+
     return (
         <Box
             component="form"
-            sx={{ ...formContainerStyles, width: '100%', maxWidth: 600 }} // Aumenta el ancho del formulario
+            sx={{ ...formContainerStyles, width: '100%', maxWidth: 900 }} // Aumenta el ancho del formulario
             onSubmit={handleSubmit}
         >
             {/* Titulo */}
@@ -201,12 +212,39 @@ const FormPerson = () => {
             </Box>
 
             {/* Botones */}
-            <Box sx={{ display: 'flex', gap: 3 }}>
-                <Button type="submit" variant="contained" color="primary" sx={{ minWidth: 100, textTransform: 'none' }}>
+            <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: 3 }}>
+                <Button
+                    type="submit"
+                    variant="contained"
+                    color="primary"
+                    size='large'
+                    startIcon={<SaveIcon />}
+                    sx={{ flexGrow: 1, minWidth: 120, textTransform: 'none' }}
+                >
                     Guardar
                 </Button>
-                <Button variant="outlined" color="primary" onClick={handleCancel} sx={{ minWidth: 100, textTransform: 'none' }}>
-                    Cancelar
+
+                <Button
+                    variant="outlined"
+                    color="primary"
+                    size='large'
+                    onClick={handleCancel}
+                    startIcon={<HighlightOffIcon />}
+                    sx={{ flexGrow: 1, minWidth: 120, textTransform: 'none' }}
+                >
+                    Limpiar
+                </Button>
+
+                <Button
+                    variant="contained"
+                    color="error"
+                    size='large'
+                    onClick={handleDelete}
+                    startIcon={<DeleteIcon />}
+                    sx={{ flexGrow: 1, minWidth: 120, textTransform: 'none' }}
+                    
+                >
+                    Eliminar
                 </Button>
             </Box>
         </Box>

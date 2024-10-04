@@ -4,9 +4,9 @@ import { Delete as DeleteIcon, Save as SaveIcon, HighlightOff as HighlightOffIco
 import SearchIcon from '@mui/icons-material/Search';
 import { formContainerStyles } from '../formStyle';
 
-const FormGender = () => {
+const FormCountry = () => {
     const [code, setCode] = useState('');
-    const [gender, setGender] = useState('');
+    const [country, setCountry] = useState('');
     const [description, setDescription] = useState('');
     const [status, setStatus] = useState(true);
     const [isEditMode, setIsEditMode] = useState(false);
@@ -30,7 +30,7 @@ const FormGender = () => {
 
         console.log({
             codigo: code,
-            estadoCivil: gender,
+            estadoCivil: country,
             descripcion: description,
             estado: status ? 'Activo' : 'Inactivo',
         });
@@ -44,7 +44,7 @@ const FormGender = () => {
 
     const handleCancel = () => {
         setCode('');
-        setGender('');
+        setCountry('');
         setDescription('');
         setStatus(true);
     };
@@ -78,7 +78,7 @@ const FormGender = () => {
                     color: '#0d6efd',
                 }}
             >
-                Maestro de Géneros
+                Maestro de Países
             </Typography>
 
             {/* Campo de código con icono de búsqueda */}
@@ -111,11 +111,11 @@ const FormGender = () => {
 
             <TextField
                 required
-                id="gender"
-                label="Género"
+                id="country"
+                label="País"
                 variant="standard"
-                value={gender}
-                onChange={(e) => setGender(e.target.value)}
+                value={country}
+                onChange={(e) => setCountry(e.target.value)}
                 inputProps={{ maxLength: 20 }}
                 sx={{ marginBottom: 2 }}
             />
@@ -177,4 +177,4 @@ const FormGender = () => {
     );
 };
 
-export default FormGender;
+export default FormCountry;

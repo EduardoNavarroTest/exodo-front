@@ -1,11 +1,24 @@
-import React, { useState } from 'react';
-import { Button, Box, Typography, Switch, FormControlLabel, TextField } from '@mui/material';
+import { useState, useEffect } from 'react';
+import { Button, Box, Typography, Switch, FormControlLabel, TextField, IconButton } from '@mui/material';
+import { Delete as DeleteIcon, Save as SaveIcon, HighlightOff as HighlightOffIcon } from '@mui/icons-material';
+import SearchIcon from '@mui/icons-material/Search';
 import { formContainerStyles } from '../formStyle';
 
 const FormIdType = () => {
     const [code, setCode] = useState('');
-    const [gender, setGender] = useState('');
-    const [active, setActive] = useState(true);
+    const [type, setType] = useState('');
+    const [description, setDescription] = useState('');
+    const [status, setStatus] = useState(true);
+    const [isEditMode, setIsEditMode] = useState(false);
+    const [existingCodes, setExistingCodes] = useState(['CO', 'US']);
+
+    useEffect(() => {
+        if (existingCodes.includes(code)) {
+            setIsEditMode(true);
+        } else {
+            setIsEditMode(false);
+        }
+    }, [code]);
 
     const handleSubmit = (event) => {
         event.preventDefault();
@@ -17,21 +30,42 @@ const FormIdType = () => {
 
         console.log({
             codigo: code,
-            genero: gender,
-            estado: active ? 'Activo' : 'Inactivo',
+            estadoCivil: type,
+            descripcion: description,
+            estado: status ? 'Activo' : 'Inactivo',
         });
+
+        if (isEditMode) {
+            console.log('Actualizando el registro existente...');
+        } else {
+            console.log('Guardando nuevo registro...');
+        }
     };
 
     const handleCancel = () => {
         setCode('');
-        setGender('');
-        setActive(true);
+        setType('');
+        setDescription('');
+        setStatus(true);
+    };
+
+    const handleDelete = () => {
+        console.log(`Eliminando el registro con código: ${code}`);
+        handleCancel();
+    };
+
+    const handleSearch = () => {
+        console.log(`Buscando el registro con código: ${code}`);
     };
 
     return (
         <Box
             component="form"
-            sx={formContainerStyles}
+            sx={{
+                ...formContainerStyles,
+                maxWidth: '425px',
+                width: '100%',
+            }}
             onSubmit={handleSubmit}
         >
             {/* Titulo */}
@@ -40,56 +74,103 @@ const FormIdType = () => {
                 sx={{
                     fontWeight: 'bold',
                     textAlign: 'center',
-                    marginBottom: 1,
+                    marginBottom: 2,
                     color: '#0d6efd',
                 }}
             >
-                Creación de Tipos de Identificación
+                Maestro de Identificaciones
             </Typography>
 
-
-            {/* Campos de entrada */}
+            {/* Campo de código con icono de búsqueda */}
             <TextField
                 id="code"
                 label="Código"
                 variant="standard"
-                value={code} 
-                onChange={(e) => setCode(e.target.value.toUpperCase())}  
+                value={code}
+                onChange={(e) => setCode(e.target.value.toUpperCase())}
                 inputProps={{ maxLength: 2 }}
-                required  
-                fullWidth
-                sx={{ marginBottom: 2 }}  
+                required
+                sx={{
+                    marginBottom: 2,
+                    '& .MuiInputAdornment-root': {
+                        marginRight: 0,
+                    },
+                }}
+                InputProps={{
+                    endAdornment: (
+                        <IconButton
+                            onClick={handleSearch}
+                            size="small"
+                            
+                        >
+                            <SearchIcon />
+                        </IconButton>
+                    ),
+                }}
             />
 
             <TextField
                 required
-                id="typeId"
-                label="Nombre"
+                id="type"
+                label="Tipo de Identificación"
                 variant="standard"
-                value={gender}
-                onChange={(e) => setGender(e.target.value)}
-                inputProps={{ maxLength: 25 }}
-                fullWidth
-                sx={{ marginBottom: 2 }}  
+                value={type}
+                onChange={(e) => setType(e.target.value)}
+                inputProps={{ maxLength: 20 }}
+                sx={{ marginBottom: 2 }}
+            />
+
+            <TextField
+                id="description"
+                label="Descripción"
+                variant="standard"
+                value={description}
+                onChange={(e) => setDescription(e.target.value)}
+                inputProps={{ maxLength: 50 }}
+                sx={{ marginBottom: 2 }}
             />
 
             {/* Switch */}
-            <Box sx={{ display: 'flex', justifyContent: 'flex-end', width: '100%', marginBottom: 0 }}>
+            <Box sx={{ display: 'flex', justifyContent: 'flex-end', width: '100%', marginBottom: 1 }}>
                 <FormControlLabel
                     control={
-                        <Switch checked={active} onChange={(e) => setActive(e.target.checked)} />
+                        <Switch checked={status} onChange={(e) => setStatus(e.target.checked)} />
                     }
                     label="Activo"
                 />
             </Box>
 
             {/* Botones */}
-            <Box sx={{ display: 'flex', gap: 3 }}>
-                <Button type="submit" variant="contained" color="primary" sx={{ minWidth: 100, textTransform: 'none' }}>
-                    Guardar
+            <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: 0.5 }}>
+                <Button
+                    type="submit"
+                    variant="contained"
+                    color="primary"
+                    startIcon={<SaveIcon />}
+                    sx={{ flexGrow: 1, minWidth: 120, textTransform: 'none' }}
+                >
+                    {isEditMode ? 'Editar' : 'Guardar'}
                 </Button>
-                <Button variant="outlined" color="primary" onClick={handleCancel} sx={{ minWidth: 100, textTransform: 'none' }}>
-                    Cancelar
+
+                <Button
+                    variant="outlined"
+                    color="primary"
+                    onClick={handleCancel}
+                    startIcon={<HighlightOffIcon />}
+                    sx={{ flexGrow: 1, minWidth: 120, textTransform: 'none' }}
+                >
+                    Limpiar
+                </Button>
+
+                <Button
+                    variant="contained"
+                    color="error"
+                    onClick={handleDelete}
+                    startIcon={<DeleteIcon />}
+                    sx={{ flexGrow: 1, minWidth: 120, textTransform: 'none' }}
+                    disabled={!isEditMode}
+                >
+                    Eliminar
                 </Button>
             </Box>
         </Box>
