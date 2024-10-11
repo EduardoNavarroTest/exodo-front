@@ -27,7 +27,7 @@ const useApiSizes = () => {
         fetchSizes();
     }, []);
 
-    const saveSize = async (code, size, description, status) => {
+    const saveSize = async (code, name, description, status) => {
         setLoading(true);
         try {
             const response = await fetch(API_URL, {
@@ -35,7 +35,7 @@ const useApiSizes = () => {
                 headers: {
                     'Content-Type': 'application/json',
                 },
-                body: JSON.stringify({ code, size, description, status }),
+                body: JSON.stringify({ code, name, description, status }),
             });
             if (!response.ok) {
                 throw new Error('Error en la respuesta de la API');

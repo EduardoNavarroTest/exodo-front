@@ -28,9 +28,60 @@ const FormSize = () => {
 
     useEffect(() => {
         if (code) {
-           getByCode();
+            getByCode();
         }
     }, [searchCode]);
+
+    const handleConfirmAction = () => {
+        if (actionType === 'save') {
+            handleCreate();
+        } else if (actionType === 'edit') {
+            handleEdit();
+        }
+        else if (actionType === 'delete') {
+            handleDelete();
+        }
+        setOpenDialog(false);
+    };
+
+     const handleSubmit = (event) => {
+        event.preventDefault(); // Evitar el envío del formulario por defecto
+    
+        handleOpenDialog(isEditMode ? 'edit' : 'save');
+        
+    };
+
+    const handleCreate = () => {
+        setActionType('save');
+        createSize();
+        handleClear();
+        setSearchCode(prev => !prev);
+    };
+
+    const handleEdit = () => {
+        setActionType('edit');
+        editSize(code, size, description, status);
+        handleClear();
+        setSearchCode(prev => !prev);
+    };
+
+    const handleClear = () => {
+        setCode('');
+        setSize('');
+        setDescription('');
+        setStatus(true);
+        setIsEditMode(false);
+        setSearchCode(prev => !prev);
+
+    };
+
+    const handleDelete = () => {
+        deleteSizeById(code);
+        handleClear();
+    };
+
+
+
 
     const getByCode = async () => {
         try {
@@ -76,40 +127,14 @@ const FormSize = () => {
 
 
     const handleOpenDialog = (type) => {
-        setActionType(type);
         setOpenDialog(true);
+        setActionType(type);
     };
 
     const handleCloseDialog = () => {
         setOpenDialog(false);
     };
 
-    const handleSubmit = (event) => {
-        event.preventDefault();
-        setSearchCode(prev => !prev);
-        if (!code) {
-            return;
-        }
-
-        const newSize = { code, size, description, status };
-
-        handleClear();
-    };
-
-    const handleClear = () => {
-        setCode('');
-        setSize('');
-        setDescription('');
-        setStatus(true);
-        setIsEditMode(false);
-        setSearchCode(prev => !prev);
-
-    };
-
-    const handleDelete = () => {
-        deleteSizeById(code);
-        handleClear();
-    };
 
     const handleSearch = () => {
         setIsSearchOpen(true);
@@ -131,15 +156,14 @@ const FormSize = () => {
     };
 
     // Manejo de navegación en inputs
-     const handleKeyDownCode = async (event) => {
-        
-        if (event.key === 'Enter' || event.key === 'Tab') {    
+    const handleKeyDownCode = async (event) => {
+
+        if (event.key === 'Enter' || event.key === 'Tab') {
             setSearchCode(prev => !prev);
             event.preventDefault();
 
-            const foundCode = await getSizeByCode(code);          
+            const foundCode = await getSizeByCode(code);
 
-            //const foundCode = existingCodes.find((item) => item.code === code);
             if (foundCode.code) {
                 setSize(foundCode.name);
                 setDescription(foundCode.description);
@@ -149,14 +173,7 @@ const FormSize = () => {
         }
     };
 
-    const handleConfirmAction = () => {
-        if (actionType === 'save') {
-            handleSubmit();
-        } else if (actionType === 'delete') {
-            handleDelete();
-        }
-        setOpenDialog(false);
-    };
+
 
     return (
         <Box
@@ -248,9 +265,9 @@ const FormSize = () => {
             {/* Botones */}
             <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: 0.5 }}>
                 <Button
+                    type="submit"
                     variant="contained"
                     color="primary"
-                    onClick={() => handleOpenDialog('save')}
                     startIcon={<SaveIcon />}
                     sx={{ flexGrow: 1, minWidth: 120, textTransform: 'none' }}
                 >
@@ -295,10 +312,18 @@ const FormSize = () => {
                 open={openDialog}
                 onClose={handleCloseDialog}
                 onConfirm={handleConfirmAction}
-                title={actionType === 'save' ? 'Confirmar Guardado' : 'Confirmar Eliminación'}
-                message={actionType === 'save'
-                    ? '¿Estás seguro de que deseas guardar esta información?'
-                    : '¿Estás seguro de que deseas eliminar estos datos?'}
+                title={
+                    actionType === 'save' ? "Confirmar Guardado" :
+                        actionType === 'edit' ? "Confirmar Edición" :
+                            actionType === 'delete' ? "Confirmar Eliminación" :
+                                ""
+                }
+                message={
+                    actionType === 'save' ? '¿Estás seguro de que deseas guardar esta información?' :
+                        actionType === 'edit' ? '¿Estás seguro de que deseas editar esta información?' :
+                            actionType === 'delete' ? '¿Estás seguro de que deseas eliminar estos datos?' :
+                                ''
+                }
             />
         </Box>
     );
