@@ -1,4 +1,6 @@
 import { useEffect, useState } from 'react';
+import CircularProgress from '@mui/material/CircularProgress';
+import Box from '@mui/material/Box';
 
 const useApiSizes = () => {
     const [existingCodes, setExistingCodes] = useState([]);
@@ -12,10 +14,10 @@ const useApiSizes = () => {
             setLoading(true);
             try {
                 const response = await fetch(API_URL);
-                if (!response.ok) {
-                    throw new Error('Error en la respuesta de la API');
-                }
                 const data = await response.json();
+                if (!response.ok) {
+                    throw new Error(data.error || 'Server error');
+                }
                 setExistingCodes(data);
             } catch (error) {
                 setError(error);
@@ -37,10 +39,14 @@ const useApiSizes = () => {
                 },
                 body: JSON.stringify({ code, name, description, status }),
             });
-            if (!response.ok) {
-                throw new Error('Error en la respuesta de la API');
-            }
+
             const data = await response.json();
+
+            if (!response.ok) {
+                throw new Error(data.error || 'Server error');
+            }
+
+
             setExistingCodes((prev) => [...prev, data]);
             return { success: true, data };
         } catch (error) {
@@ -58,10 +64,10 @@ const useApiSizes = () => {
             const response = await fetch(`${API_URL}/code/${id}`, {
                 method: 'DELETE',
             });
-            if (!response.ok) {
-                throw new Error('Error en la respuesta de la API');
-            }
             const data = await response.json();
+            if (!response.ok) {
+                throw new Error(data.error || 'Server error');
+            }
             setExistingCodes((prev) => prev.filter((size) => size.id !== id));
             return { success: true, data };
         } catch (error) {
@@ -73,20 +79,30 @@ const useApiSizes = () => {
         }
     };
 
-    const editSize = async (id, code, size, description, status) => {
+    const editSize = async (id, codeNew, nameNew, descriptionNew, statusNew) => {
+
         setLoading(true);
         try {
-            const response = await fetch(`${API_URL}/${id}`, {
+            const existingCode = await getSizeByCode(codeNew);
+            console.log(existingCode);
+
+            if ((id !== codeNew) && existingCode.success) {
+                console.log('La nueva talla ya existe');
+                return { success: false, error: 'La nueva talla ingresada ya existe' };
+            }
+
+            const response = await fetch(`${API_URL}/code/${id}`, {
                 method: 'PUT',
                 headers: {
                     'Content-Type': 'application/json',
                 },
-                body: JSON.stringify({ code, size, description, status }),
+                body: JSON.stringify({ codeNew, nameNew, descriptionNew, statusNew }),
             });
-            if (!response.ok) {
-                throw new Error('Error en la respuesta de la API');
-            }
             const data = await response.json();
+            if (!response.ok) {
+                throw new Error(data.error || 'Server error');
+            }
+
             setExistingCodes((prev) =>
                 prev.map((size) => (size.id === id ? data : size))
             );
@@ -104,21 +120,23 @@ const useApiSizes = () => {
         setLoading(true);
         try {
             const response = await fetch(`${API_URL}/code/${code}`);
-            if (!response.ok) {
-                throw new Error('Error en la respuesta de la API');
-            }
             const data = await response.json();
+            if (!response.ok) {
+                throw new Error(data.error || 'Server error');
+            }
             return { success: true, data };
         } catch (error) {
             setError(error);
-            console.error('Error al buscar la talla:', error);
+            console.warn('Error al buscar la talla:', error);
             return { success: false, error };
         } finally {
             setLoading(false);
         }
     };
 
-    return { existingCodes, error, loading, saveSize, deleteSize, editSize, getSizeByCode };
+    return { existingCodes, error, loading, saveSize, deleteSize, editSize, getSizeByCode 
+        
+    };
 };
 
 export default useApiSizes;

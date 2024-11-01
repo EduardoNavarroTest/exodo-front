@@ -31,7 +31,16 @@ function App() {
     </BrowserRouter>
   );
 }
+/*
+Faltantes
+- Toash al momento de guardar/eliminar o editar
+- Lógica para el manejo del update para controlar el codigo old con el codigo new (Implementar un nuevo campo?)
+- Manejo de erroes en la API desde el front (Ya la parte de create size lo tiene, solo se debe replicar)
+- Mandarle todos los registros al showmodal para filtrar
+- Colocar spinner en el loading
 
+
+*/
 
 
 export default App;
