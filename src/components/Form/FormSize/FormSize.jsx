@@ -7,6 +7,7 @@ import SearchModal from "../SearchModal/SearchModal.jsx";
 import AlertDialog from '../../AlertDialog/AlertDialog.jsx';
 import useApiSizes from '../../../hooks/api/useApiSizes.js';
 import LoadingSpinner from '../../LoadingSpinner/LoadingSpinner.jsx';
+import CustomSnackbar from '../../CustomSnackbar/CustomSnackbar.jsx';
 
 const FormSize = () => {
     const [code, setCode] = useState('');
@@ -23,8 +24,10 @@ const FormSize = () => {
     const [snackbarOpen, setSnackbarOpen] = useState(false);
     const [snackbarMessage, setSnackbarMessage] = useState('');
     const [snackbarSeverity, setSnackbarSeverity] = useState('success');
+    const [data, setData] = useState([]);
+    const [rowdata, setRowdata] = useState({});
 
-    const { getSizeByCode, deleteSize, editSize, saveSize } = useApiSizes();
+    const { getSizeByCode, deleteSize, editSize, saveSize, getSizes } = useApiSizes();
 
     const sizeRef = useRef(null);
     const descriptionRef = useRef(null);
@@ -37,12 +40,17 @@ const FormSize = () => {
     }, [searchCode]);
 
     const handleConfirmAction = () => {
-        if (actionType === 'save') {
-            handleCreate();
-        } else if (actionType === 'edit') {
-            handleEdit();
-        } else if (actionType === 'delete') {
-            handleDelete();
+
+        switch (actionType) {
+            case 'save':
+                handleCreate();
+                break;
+            case 'edit':
+                handleEdit();
+                break; 
+            case 'delete':
+                handleDelete();
+                break;
         }
         setOpenDialog(false);
     };
@@ -53,14 +61,12 @@ const FormSize = () => {
     };
 
     const handleCreate = () => {
-        setActionType('save');
         createSize();
         handleClear();
         setSearchCode(prev => !prev);
     };
 
     const handleEdit = () => {
-        setActionType('edit');
         updateSize();
         handleClear();
         setSearchCode(prev => !prev);
@@ -85,11 +91,29 @@ const FormSize = () => {
         setSnackbarOpen(false);
     };
 
+    const getData = async () => {
+        setLoading(true);
+        try {
+            const response = await getSizes();
+            if (response && response.success) {
+                setData(response.data);
+            } else {
+                setSnackbarMessage(response.error.message || 'Error al cargar las tallas');
+                setSnackbarSeverity('error');
+                setSnackbarOpen(true);
+                console.log(response.error.message || 'Error al cargar las tallas');
+            }
+        } catch (error) {
+            console.error("Error fetching data:", error);
+        }finally {
+            setLoading(false);
+        }
+    }
+
     const getByCode = async () => {
         setLoading(true);
         try {
             const response = await getSizeByCode(code);
-            console.warn(response);
             if (response && response.success) {
                 const { code, name, description, status } = response.data;
                 setIsEditMode(true);
@@ -125,6 +149,7 @@ const FormSize = () => {
                 setSnackbarMessage("Talla guardada exitosamente");
                 setSnackbarSeverity('success');
             } else {
+                console.log(response.error.message || "Error al crear la talla");
                 setSnackbarMessage(response.error.message || "Error al crear la talla");
                 setSnackbarSeverity('error');
             }
@@ -147,6 +172,7 @@ const FormSize = () => {
                 setSnackbarMessage("Talla editada exitosamente");
                 setSnackbarSeverity('success');
             } else {
+                console.log(response.error || "Error al editar la talla");
                 setSnackbarMessage(response.error.message || "Error al editar la talla");
                 setSnackbarSeverity('error');
             }
@@ -189,7 +215,8 @@ const FormSize = () => {
         setOpenDialog(false);
     };
 
-    const handleSearch = () => {
+    const handleSearch = async() => {
+        await getData();
         setIsSearchOpen(true);
     };
 
@@ -197,10 +224,18 @@ const FormSize = () => {
         setIsSearchOpen(false);
     };
 
-    const handleSearchAction = () => {
-        console.log(`Buscando el registro con código: ${code}`);
+    const handleSearchAction = (selectedRow) => {
+        if (!selectedRow) return; 
+        
+        setCode(selectedRow.code);
+        setOldCode(selectedRow.code);
+        setSize(selectedRow.name); 
+        setDescription(selectedRow.description);
+        setStatus(selectedRow.status);
         setIsSearchOpen(false);
+        setIsEditMode(true);
     };
+    
 
     const handleKeyDown = (event) => {
         if (event.key === 'Enter') {
@@ -329,36 +364,25 @@ const FormSize = () => {
             <SearchModal
                 open={isSearchOpen}
                 onClose={handleCloseSearch}
-                onSearch={handleSearchAction}
+                onSearch={(selectedRow) => handleSearchAction(selectedRow)}
                 searchOptions={[
                     { label: 'Código', value: 'code' },
                     { label: 'Nombre', value: 'name' },
                 ]}
+                data={data}
             />
 
             <AlertDialog
                 open={openDialog}
                 onClose={handleCloseDialog}
                 onConfirm={handleConfirmAction}
-                title={
-                    actionType === 'save' ? "Confirmar Guardado" :
-                        actionType === 'edit' ? "Confirmar Edición" :
-                            actionType === 'delete' ? "Confirmar Eliminación" : ""
-                }
-                message={
-                    actionType === 'save' ? '¿Estás seguro de que deseas guardar esta información?' :
-                        actionType === 'edit' ? '¿Estás seguro de que deseas editar esta información?' :
-                            actionType === 'delete' ? '¿Estás seguro de que deseas eliminar estos datos?' : ''
-                }
+                actionType={actionType}
             />
 
             <LoadingSpinner loading={loading} />
 
-            <Snackbar open={snackbarOpen} autoHideDuration={6000} onClose={handleCloseSnackbar}>
-                <Alert onClose={handleCloseSnackbar} severity={snackbarSeverity} variant="filled" sx={{ width: '100%' }}>
-                    {snackbarMessage}
-                </Alert>
-            </Snackbar>
+           <CustomSnackbar open={snackbarOpen} onClose={handleCloseSnackbar} severity={snackbarSeverity} message={snackbarMessage} />
+            
         </Box>
     );
 };

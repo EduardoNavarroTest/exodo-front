@@ -33,12 +33,13 @@ function App() {
 }
 /*
 Faltantes
-- Toash al momento de guardar/eliminar o editar
-- Lógica para el manejo del update para controlar el codigo old con el codigo new (Implementar un nuevo campo?)
-- Manejo de erroes en la API desde el front (Ya la parte de create size lo tiene, solo se debe replicar)
-- Mandarle todos los registros al showmodal para filtrar
-- Colocar spinner en el loading
 
+- Lógica para el manejo del update para controlar el codigo old con el codigo new (Implementar un nuevo campo?)
+- Mandarle todos los registros al showmodal para filtrar
+
+1. Creación de un tercero (cliente, empleado, proveedor, etc) 
+2. Creación de un usuario
+3. Creación de un producto
 
 */
 

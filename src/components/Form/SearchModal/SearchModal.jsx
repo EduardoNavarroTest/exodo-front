@@ -1,12 +1,26 @@
 import { Dialog, DialogTitle, DialogContent, DialogActions, Button, TextField, Box, MenuItem, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Paper, Select, FormControl, InputLabel, FormHelperText } from '@mui/material';
 import VisibilityIcon from '@mui/icons-material/Visibility';
 import HighlightOffIcon from '@mui/icons-material/HighlightOff';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 
-const SearchModal = ({ open, onClose, onSearch, searchOptions }) => {
+const SearchModal = ({ open, onClose, onSearch, searchOptions, data }) => {
     const [selectedOption, setSelectedOption] = useState(searchOptions[0]?.value || '');
     const [searchTerm, setSearchTerm] = useState('');
     const [rows, setRows] = useState([]);
+
+
+    useEffect(() => {
+        if (data) {
+            setRows(data);
+        }
+    }, [data]);
+
+    // Efecto para limpiar los datos al cerrar el modal
+    useEffect(() => {
+        if (!open) {
+            handleClear();
+        }
+    }, [open, data, searchOptions]);
 
     // Función que simula el filtrado de datos
     const handleSearchChange = (e) => {
@@ -14,7 +28,7 @@ const SearchModal = ({ open, onClose, onSearch, searchOptions }) => {
         setSearchTerm(value);
 
         // Simulamos un resultado de búsqueda filtrando las filas por el término de búsqueda
-        const filteredRows = mockData.filter((row) => {
+        const filteredRows = data.filter((row) => {
             if (selectedOption === 'code') {
                 return row.code.includes(value.toUpperCase());
             } else if (selectedOption === 'name') {
@@ -26,33 +40,26 @@ const SearchModal = ({ open, onClose, onSearch, searchOptions }) => {
         setRows(filteredRows);
     };
 
-    // Datos simulados
-    const mockData = [
-        { id: 1, code: 'CO', name: 'Colombia' },
-        { id: 2, code: 'US', name: 'United States' },
-        { id: 3, code: 'VE', name: 'Venezuela' },
-        { id: 4, code: 'BR', name: 'Brazil' },
-        { id: 5, code: 'PE', name: 'Peru' },
-        { id: 6, code: 'ES', name: 'España' },
-        { id: 7, code: 'FR', name: 'Francia' },
-        { id: 8, code: 'RS', name: 'Rusia' },
-        { id: 9, code: 'CO', name: 'Cocolombia' },
-        { id: 10, code: 'RU', name: 'Imperio del Reino Unido de Gran Bretaña e Irlanda del Norte' },
-        { id: 11, code: 'RU', name: 'Reino Unido' },
-    ];
 
     // Función para manejar la selección de un registro
     const handleSelect = (row) => {
         console.log('Registro seleccionado:', row);
+        onSearch(row);
+        onClose();
         // Aquí puedes agregar la lógica que necesites para manejar la selección
     };
+
+    const handleClear = () => {
+        setSelectedOption(searchOptions[0]?.value || '');
+        setSearchTerm('');
+        setRows(data);
+    }
 
 
     return (
         <Dialog open={open} onClose={onClose} fullWidth maxWidth="sm">
             <DialogTitle>Buscar Información</DialogTitle>
             <DialogContent>
-
                 {/* Combo desplegable y campo de búsqueda alineados horizontalmente */}
                 <Box sx={{ display: 'flex', gap: 2, marginBottom: 2, marginTop: 1, alignItems: "center" }}>
 
@@ -145,13 +152,12 @@ const SearchModal = ({ open, onClose, onSearch, searchOptions }) => {
                         </TableBody>
                     </Table>
                 </TableContainer>
-
             </DialogContent>
 
             <DialogActions>
                 <Button onClick={onClose} variant="outlined" color="primary" startIcon={< HighlightOffIcon />} >Cerrar</Button>
-
             </DialogActions>
+
         </Dialog >
     );
 };

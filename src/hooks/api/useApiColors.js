@@ -1,16 +1,14 @@
 import { useEffect, useState } from 'react';
 
-const useApiSizes = () => {
+const useApiColors = () => {
     const [existingCodes, setExistingCodes] = useState([]);
     const [error, setError] = useState(null);
     const [loading, setLoading] = useState(false);
 
-    const API_URL = 'http://localhost:8080/api/sizes';
+    const API_URL = 'http://localhost:8080/api/colors';
 
-
-    /**ARREGLAR ESTO  */
     useEffect(() => {
-        const fetchSizes = async () => {
+        const fetchColors = async () => {
             setLoading(true);
             try {
                 const response = await fetch(API_URL);
@@ -21,34 +19,15 @@ const useApiSizes = () => {
                 setExistingCodes(data);
             } catch (error) {
                 setError(error);
-                console.error('Error al cargar las tallas:', error);
+                console.error('Error al cargar los colores:', error);
             } finally {
                 setLoading(false);
             }
         };
-        fetchSizes();
+        fetchColors();
     }, []);
-    
 
-    const getSizes = async () => {
-        setLoading(true);
-        try {
-            const response = await fetch(API_URL);
-            const data = await response.json();
-            if (!response.ok) {
-                throw new Error(data.error || 'Server error');
-            }
-            return { success: true, data };
-        } catch (error) {
-            setError(error);
-            console.error('Error al cargar las tallas:', error);
-            return { success: false, error };
-        } finally {
-            setLoading(false);
-        }
-    }
-
-    const saveSize = async (code, name, description, status) => {
+    const saveColor = async (code, name, description, status) => {
         setLoading(true);
         try {
             const response = await fetch(API_URL, {
@@ -70,14 +49,14 @@ const useApiSizes = () => {
             return { success: true, data };
         } catch (error) {
             setError(error);
-            console.error('Error al guardar la talla:', error);
+            console.error('Error al guardar el color:', error);
             return { success: false, error };
         } finally {
             setLoading(false);
         }
     };
 
-    const deleteSize = async (id) => {
+    const deleteColor = async (id) => {
         setLoading(true);
         try {
             const response = await fetch(`${API_URL}/code/${id}`, {
@@ -87,29 +66,21 @@ const useApiSizes = () => {
             if (!response.ok) {
                 throw new Error(data.error || 'Server error');
             }
-            setExistingCodes((prev) => prev.filter((size) => size.id !== id));
+            setExistingCodes((prev) => prev.filter((color) => color.id !== id));
             return { success: true, data };
         } catch (error) {
             setError(error);
-            console.error('Error al eliminar la talla:', error);
+            console.error('Error al eliminar el color:', error);
             return { success: false, error };
         } finally {
             setLoading(false);
         }
     };
 
-    const editSize = async (id, codeNew, nameNew, descriptionNew, statusNew) => {
+    const editColor = async (id, codeNew, nameNew, descriptionNew, statusNew) => {
 
         setLoading(true);
         try {
-            /** SE COMENTA CÓDIGO YA QUE SE DEJA RESPONSABILIDAD DE CONTROL DE DUPLICADO DEL LADO DEL BACK */
-            // const existingCode = await getSizeByCode(codeNew);
-            // console.log(existingCode);
-
-            // if ((id !== codeNew) && existingCode.success) {
-            //     throw new Error({ success: false, error: { message: 'La nueva talla ingresada ya existe' } });
-            // }
-
             const response = await fetch(`${API_URL}/code/${id}`, {
                 method: 'PUT',
                 headers: {
@@ -119,25 +90,27 @@ const useApiSizes = () => {
             });
             const data = await response.json();
 
+            console.log(data)
+
             if (!response.ok) {
                 throw new Error(data.error || 'Server error');
             }
 
             setExistingCodes((prev) =>
-                prev.map((size) => (size.id === id ? data : size))
+                prev.map((color) => (color.id === id ? data : color))
             );
             return { success: true, data };
         } catch (error) {
             console.warn(error)
             setError(error);
-            console.error('Error al editar la talla:', error);
+            console.error('Error al editar el color:', error);
             return { success: false, error };
         } finally {
             setLoading(false);
         }
     };
 
-    const getSizeByCode = async (code) => {
+    const getColorByCode = async (code) => {
         setLoading(true);
         try {
             const response = await fetch(`${API_URL}/code/${code}`);
@@ -148,15 +121,14 @@ const useApiSizes = () => {
             return { success: true, data };
         } catch (error) {
             setError(error);
-            console.warn('Error al buscar la talla:', error);
+            console.warn('Error al buscar el color:', error);
             return { success: false, error };
         } finally {
             setLoading(false);
         }
     };
 
-
-    return { existingCodes, error, loading, getSizes, saveSize, deleteSize, editSize, getSizeByCode };
+    return { existingCodes, error, loading, saveColor, deleteColor, editColor, getColorByCode };
 };
 
-export default useApiSizes;
+export default useApiColors;
