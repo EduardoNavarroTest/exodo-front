@@ -25,6 +25,7 @@ import FormCountry from '../Form/FormCountry/FormCountry';
 import FormMaritalStatus from '../Form/FormMaritalStatus/FormMaritalStatus';
 import FormColor from '../Form/FormColor/FormColor';
 import FormSize from '../Form/FormSize/FormSize';
+import FormProduct from '../Form/FormProduct/FormProduct';
 
 const Search = styled('div')(({ theme }) => ({
   position: 'relative',
@@ -114,18 +115,21 @@ export default function Navbar() {
       case 3:
         setSelectedComponent(<FormGender />);
         break;
-        case 4:
+      case 4:
         setSelectedComponent(<FormCountry />);
         break;
-        case 5:
+      case 5:
         setSelectedComponent(<FormMaritalStatus />);
         break;
-        case 6:
+      case 6:
         setSelectedComponent(<FormColor />);
         break;
-        case 7:
-          setSelectedComponent(<FormSize />);
-          break;
+      case 7:
+        setSelectedComponent(<FormSize />);
+        break;
+      case 8:
+        setSelectedComponent(<FormProduct />);
+        break;
       default:
         setSelectedComponent(null);
     }
@@ -160,7 +164,8 @@ export default function Navbar() {
       <MenuItem onClick={() => handleShowComponentes(5)}>Maestro de Estados Civiles</MenuItem>
       <MenuItem onClick={() => handleShowComponentes(6)}>Maestro de Colores</MenuItem>
       <MenuItem onClick={() => handleShowComponentes(7)}>Maestro de Tallas</MenuItem>
-      
+      <MenuItem onClick={() => handleShowComponentes(8)}>Productos</MenuItem>
+
     </Menu>
   );
 

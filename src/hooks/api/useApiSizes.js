@@ -80,7 +80,7 @@ const useApiSizes = () => {
     const deleteSize = async (id) => {
         setLoading(true);
         try {
-            const response = await fetch(`${API_URL}/code/${id}`, {
+            const response = await fetch(`${API_URL}/id/${id}`, {
                 method: 'DELETE',
             });
             const data = await response.json();
@@ -98,19 +98,12 @@ const useApiSizes = () => {
         }
     };
 
-    const editSize = async (id, codeNew, nameNew, descriptionNew, statusNew) => {
+    const editSize = async (id, code, codeNew, nameNew, descriptionNew, statusNew) => {
 
         setLoading(true);
         try {
-            /** SE COMENTA CÓDIGO YA QUE SE DEJA RESPONSABILIDAD DE CONTROL DE DUPLICADO DEL LADO DEL BACK */
-            // const existingCode = await getSizeByCode(codeNew);
-            // console.log(existingCode);
 
-            // if ((id !== codeNew) && existingCode.success) {
-            //     throw new Error({ success: false, error: { message: 'La nueva talla ingresada ya existe' } });
-            // }
-
-            const response = await fetch(`${API_URL}/code/${id}`, {
+            const response = await fetch(`${API_URL}/id/${id}`, {
                 method: 'PUT',
                 headers: {
                     'Content-Type': 'application/json',

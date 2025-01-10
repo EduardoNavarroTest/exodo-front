@@ -1,7 +1,7 @@
-import Login from '../../components/Login/Login.jsx'
+import Login2 from '../../components/Login/Login2.jsx'
 const Signin = () => {
     return(
-        <Login />
+        <Login2 />
     )
 }
 

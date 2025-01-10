@@ -1,5 +1,5 @@
 import { useState, useEffect, useRef } from 'react';
-import { Button, Box, Typography, Switch, FormControlLabel, TextField, IconButton, Snackbar, Alert } from '@mui/material';
+import { Button, Box, Typography, Switch, FormControlLabel, TextField, IconButton } from '@mui/material';
 import { Delete as DeleteIcon, Save as SaveIcon, HighlightOff as HighlightOffIcon } from '@mui/icons-material';
 import SearchIcon from '@mui/icons-material/Search';
 import { formContainerStyles } from '../formStyle.js';
@@ -10,6 +10,7 @@ import LoadingSpinner from '../../LoadingSpinner/LoadingSpinner.jsx';
 import CustomSnackbar from '../../CustomSnackbar/CustomSnackbar.jsx';
 
 const FormSize = () => {
+    const [id, setId] = useState('');
     const [code, setCode] = useState('');
     const [oldCode, setOldCode] = useState('');
     const [size, setSize] = useState('');
@@ -73,6 +74,7 @@ const FormSize = () => {
     };
 
     const handleClear = () => {
+        setId('');
         setCode('');
         setOldCode('');
         setSize('');
@@ -115,14 +117,15 @@ const FormSize = () => {
         try {
             const response = await getSizeByCode(code);
             if (response && response.success) {
-                const { code, name, description, status } = response.data;
+                const { id, code, name, description, status } = response.data;
                 setIsEditMode(true);
+                setId(id);
                 setCode(code);
                 setOldCode(code);
                 setSize(name);
                 setDescription(description);
                 setStatus(status);
-                setSnackbarMessage(`Código '${code}' encontrado`);
+                setSnackbarMessage(`Código '${code} encontrado`);
                 setSnackbarSeverity('info');
                 setSnackbarOpen(true);
             } else {
@@ -167,7 +170,7 @@ const FormSize = () => {
     const updateSize = async () => {
         setLoading(true);
         try {
-            const response = await editSize(oldCode, code, size, description, status);
+            const response = await editSize(id, oldCode, code, size, description, status);
             if (response && response.success) {
                 setSnackbarMessage("Talla editada exitosamente");
                 setSnackbarSeverity('success');
@@ -188,7 +191,7 @@ const FormSize = () => {
     const deleteSizeById = async () => {
         setLoading(true);
         try {
-            const response = await deleteSize(code);
+            const response = await deleteSize(id);
             if (response && response.success) {
                 setSnackbarMessage("Talla eliminada exitosamente");
                 setSnackbarSeverity('success');
@@ -227,6 +230,7 @@ const FormSize = () => {
     const handleSearchAction = (selectedRow) => {
         if (!selectedRow) return; 
         
+        setId(selectedRow.id);
         setCode(selectedRow.code);
         setOldCode(selectedRow.code);
         setSize(selectedRow.name); 
@@ -254,25 +258,31 @@ const FormSize = () => {
 
     return (
         <Box
-            component="form"
-            sx={{
-                ...formContainerStyles,
-                maxWidth: '425px',
-                width: '100%',
-            }}
-            onSubmit={handleSubmit}
+        component="form"
+        onSubmit={handleSubmit}
+        sx={{
+          display: "flex",
+          flexDirection: "column",
+          gap: 2,
+          maxWidth: "500px",
+          margin: "0 auto",
+          padding: 3,
+          borderRadius: 2,
+          backgroundColor: "#f9f9f9",
+          boxShadow: "0 2px 8px rgba(0, 0, 0, 0.1)",
+        }}
+      >
+        <Typography
+          variant="h5"
+          sx={{
+            textAlign: "center",
+            fontWeight: "bold",
+            color: "#0d6efd",
+            marginBottom: 2,
+          }}
         >
-            <Typography
-                variant="h5"
-                sx={{
-                    fontWeight: 'bold',
-                    textAlign: 'center',
-                    marginBottom: 2,
-                    color: '#0d6efd',
-                }}
-            >
-                Maestro de Tallas
-            </Typography>
+          Maestro de Tallas
+        </Typography>
 
             <TextField
                 id="code"
