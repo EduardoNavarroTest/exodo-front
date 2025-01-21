@@ -148,6 +148,7 @@ const FormSize = () => {
         setLoading(true);
         try {
             const response = await saveSize(code, size, description, status);
+            console.log(response)
             if (response && response.success) {
                 setSnackbarMessage("Talla guardada exitosamente");
                 setSnackbarSeverity('success');

@@ -13,7 +13,7 @@ const useApiSizes = () => {
         const fetchSizes = async () => {
             setLoading(true);
             try {
-                const response = await fetch(API_URL);
+                const response = await fetch(API_URL, { credentials: 'include' });
                 const data = await response.json();
                 if (!response.ok) {
                     throw new Error(data.error || 'Server error');
@@ -28,12 +28,12 @@ const useApiSizes = () => {
         };
         fetchSizes();
     }, []);
-    
+
 
     const getSizes = async () => {
         setLoading(true);
         try {
-            const response = await fetch(API_URL);
+            const response = await fetch(API_URL, { credentials: 'include' });
             const data = await response.json();
             if (!response.ok) {
                 throw new Error(data.error || 'Server error');
@@ -54,9 +54,10 @@ const useApiSizes = () => {
             const response = await fetch(API_URL, {
                 method: 'POST',
                 headers: {
-                    'Content-Type': 'application/json',
+                    'Content-Type': 'application/json'
                 },
                 body: JSON.stringify({ code, name, description, status }),
+                credentials: 'include'
             });
 
             const data = await response.json();
@@ -65,8 +66,9 @@ const useApiSizes = () => {
                 throw new Error(data.error || 'Server error');
             }
 
-
             setExistingCodes((prev) => [...prev, data]);
+            console.log(data)
+            console.log(existingCodes)
             return { success: true, data };
         } catch (error) {
             setError(error);
@@ -82,6 +84,7 @@ const useApiSizes = () => {
         try {
             const response = await fetch(`${API_URL}/id/${id}`, {
                 method: 'DELETE',
+                credentials: 'include'
             });
             const data = await response.json();
             if (!response.ok) {
@@ -106,9 +109,10 @@ const useApiSizes = () => {
             const response = await fetch(`${API_URL}/id/${id}`, {
                 method: 'PUT',
                 headers: {
-                    'Content-Type': 'application/json',
+                    'Content-Type': 'application/json'
                 },
                 body: JSON.stringify({ codeNew, nameNew, descriptionNew, statusNew }),
+                credentials: 'include'
             });
             const data = await response.json();
 
@@ -133,7 +137,7 @@ const useApiSizes = () => {
     const getSizeByCode = async (code) => {
         setLoading(true);
         try {
-            const response = await fetch(`${API_URL}/code/${code}`);
+            const response = await fetch(`${API_URL}/code/${code}`, { credentials: 'include' });
             const data = await response.json();
             if (!response.ok) {
                 throw new Error(data.error || 'Server error');

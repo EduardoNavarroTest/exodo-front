@@ -1,61 +1,102 @@
 import { useState } from 'react';
-import { Link } from 'react-router-dom';
+import { Person, Lock, Visibility, VisibilityOff } from '@mui/icons-material';
+import useApiSessions from '../../hooks/api/useApiSession.js';
+import LoadingSpinner from '../LoadingSpinner/LoadingSpinner.jsx';
+import CustomSnackbar from '../CustomSnackbar/CustomSnackbar.jsx';
+import { useNavigate } from 'react-router-dom';
+import './Login.css';
 
 const Login = () => {
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
+  const [showPassword, setShowPassword] = useState(false);
+  const [loading, setLoading] = useState(false);
+  const [snackbarOpen, setSnackbarOpen] = useState(false);
+  const [snackbarMessage, setSnackbarMessage] = useState('');
+  const [snackbarSeverity, setSnackbarSeverity] = useState('success');
+  const { login } = useApiSessions();
+  const navigate = useNavigate();
 
-  const handleSubmit = (e) => {
-    e.preventDefault();
-    console.log('Username:', username);
-    console.log('Password:', password);
+  const handleSubmit = async (e) => {
+    try {
+      setLoading(true);
+      e.preventDefault();
+      const result = await login(username, password);
+      if (result.success) {
+        navigate('/home');
+      } else {
+        setSnackbarOpen(true);
+        setSnackbarSeverity('error');
+        setSnackbarMessage(result.error || 'Error al iniciar sesión');
+      }
+    } catch (error) {
+      setSnackbarMessage(error || 'Error al iniciar sesión');
+      setSnackbarSeverity('warning');
+      setSnackbarOpen(true);
+    } finally {
+      setLoading(false);
+    }
+  };
 
+
+  const handleCloseSnackbar = () => {
+    setSnackbarOpen(false);
+  };
+
+
+  const togglePasswordVisibility = () => {
+    setShowPassword(!showPassword);
   };
 
   return (
-    <div className="flex items-center justify-center min-h-screen bg-gray-100">
-      <div className="w-full max-w-lg p-8 space-y-8 bg-white rounded-lg shadow-md">
-
-        <div className="text-center">
-          <h2 className="text-2xl font-bold text-gray-800">INICIAR SESIÓN</h2>
-          <p className="text-gray-600">Inicia sesión para acceder a tu cuenta</p>
+    <div className="login-body">
+      <div className='login-container'>
+        <div className="welcome-message">
+          ¡Bienvenido a Éxodo! Por favor, inicia sesión para continuar.
         </div>
-        <form onSubmit={handleSubmit} className="space-y-6">
-          <div className="space-y-1">
+
+        <form className='login-form' onSubmit={handleSubmit}>
+          <h1 className='login-title'>Login</h1>
+
+          <div className="input-box">
+            <Person className='input-icon' />
             <input
               type="text"
-              id="username"
-              placeholder="User"
+              placeholder='Username'
               value={username}
               onChange={(e) => setUsername(e.target.value)}
               required
-              className="w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
             />
           </div>
-          <div className="space-y-1">
+
+          <div className="input-box">
+            <Lock className='input-icon' />
             <input
-              type="password"
-              id="password"
-              placeholder="Password"
+              type={showPassword ? "text" : "password"}
+              placeholder='Password'
               value={password}
               onChange={(e) => setPassword(e.target.value)}
               required
-              className="w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
             />
-            <a
-              href="/forgot-password"
-              className="text-blue-500 hover:underline block text-right mt-2"
-            >
-              Forgot your password?
-            </a>
+            <div className="password-icon" onClick={togglePasswordVisibility}>
+              {showPassword ? <VisibilityOff /> : <Visibility />}
+            </div>
           </div>
-          <Link to='/home'
-            className="w-full block px-4 py-2 text-white bg-blue-500 rounded-md hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-500 text-center flex justify-center">
-            Iniciar sesión
-          </Link>
 
+          <div className='remember-forgot-box'>
+            <label htmlFor="remember">
+              <input type="checkbox" id='remember' />
+              Remember me
+            </label>
+            <a href="#">Forgot Password?</a>
+          </div>
 
+          <button className='login-btn' type='submit'>Login</button>
         </form>
+
+        <LoadingSpinner loading={loading} />
+
+        <CustomSnackbar open={snackbarOpen} onClose={handleCloseSnackbar} severity={snackbarSeverity} message={snackbarMessage} />
       </div>
     </div>
   );
